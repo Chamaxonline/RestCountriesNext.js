@@ -4,17 +4,17 @@ import countriesData from "../../../data/countries.json"; // Update the path to 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
-    const { countryName } = req.query;
+    const { name } = req.query;
 
-    if (countryName) {
-      const selectedCountry = countriesData.find(
-        (country) =>
-          country.name.common.toLowerCase() === countryName.toLowerCase()
-      );
-      return res.status(200).json(selectedCountry);
+    if (name) {
+      const searchResults = countriesData.filter((country) =>
+        country.name.common.toLowerCase().includes(name.toLowerCase())
+      ).map(x=> x.name.common);;
+
+      return res.status(200).json(searchResults);
     } else {
       return res.status(405).json({ message: "Method not allowed" });
     }
   }
 };
-//http://localhost:3000/api/countries/country?countryName=india
+//http://localhost:3000/api/countries/search?name=land
